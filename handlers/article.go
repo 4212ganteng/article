@@ -5,6 +5,7 @@ import (
 	"articletes/models"
 	"articletes/repositories"
 	"encoding/json"
+	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -97,9 +98,14 @@ func (h *handlerarticle) CreateArticle(w http.ResponseWriter, r *http.Request) {
 
 func (h *handlerarticle) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	id, _ := strconv.Atoi(mux.Vars(r)["id"])
 	//get request
-	var request dto.ArticleUpdateRequest
+	var request dto.ArticleRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		response := dto.ErrResult{Status: "failed", Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 	//	validator
 	validation := validator.New()
 	err := validation.Struct(request)
@@ -109,6 +115,8 @@ func (h *handlerarticle) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
+	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+
 	field := models.Posts{
 		Title:    request.Title,
 		Content:  request.Content,
@@ -116,7 +124,7 @@ func (h *handlerarticle) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 		Status:   request.Status,
 	}
 	article := models.Posts{}
-
+	article.Id = id
 	if field.Title != "" {
 		article.Title = field.Title
 	}
@@ -129,7 +137,7 @@ func (h *handlerarticle) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	if field.Status != "" {
 		article.Status = field.Status
 	}
-
+	fmt.Println(field)
 	artc, err := h.articlerepository.UpdateArticle(article, id)
 
 	if err != nil {
