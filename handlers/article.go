@@ -158,7 +158,7 @@ func (h *handlerarticle) DeleteArticle(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
 	article := models.Posts{}
 
-	deletedFilm, err := h.articlerepository.DeleteArticle(article, id)
+	artc, err := h.articlerepository.DeleteArticle(article, id)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := dto.ErrResult{Status: "failed", Message: err.Error()}
@@ -167,6 +167,6 @@ func (h *handlerarticle) DeleteArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Status: "success", Data: deletedFilm}
+	response := dto.SuccessResult{Status: "success", Data: artc}
 	json.NewEncoder(w).Encode(response)
 }
