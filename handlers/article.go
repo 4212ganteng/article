@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type handlerarticle struct {
@@ -28,6 +29,23 @@ func (h *handlerarticle) FindArticle(w http.ResponseWriter, r *http.Request) {
 	offset, _ := strconv.Atoi(mux.Vars(r)["offset"])
 
 	artc, err := h.articlerepository.FindArticle(limit, offset)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		response := dto.ErrResult{Status: "failed", Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	response := dto.SuccessResult{Status: "Success", Data: artc}
+	json.NewEncoder(w).Encode(response)
+}
+
+func (h *handlerarticle) GetAllArticles(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	artc, err := h.articlerepository.GetAllArticles()
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -78,10 +96,12 @@ func (h *handlerarticle) CreateArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	field := models.Posts{
-		Title:    request.Title,
-		Content:  request.Content,
-		Category: request.Category,
-		Status:   request.Status,
+		Title:        request.Title,
+		Content:      request.Content,
+		Category:     request.Category,
+		Status:       request.Status,
+		Created_date: time.Now(),
+		Updated_date: time.Now(),
 	}
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -99,7 +119,7 @@ func (h *handlerarticle) CreateArticle(w http.ResponseWriter, r *http.Request) {
 func (h *handlerarticle) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	//get request
-	var request dto.ArticleRequest
+	var request dto.ArticleRequestUpdate
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := dto.ErrResult{Status: "failed", Message: err.Error()}

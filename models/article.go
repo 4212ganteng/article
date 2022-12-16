@@ -1,8 +1,6 @@
 package models
 
-import (
-	"time"
-)
+import "time"
 
 type Posts struct {
 	Id           int       `json:"id" gorm:"primary_key:auto_increment"`

@@ -12,6 +12,7 @@ func ArticleRoute(r *mux.Router) {
 	h := handlers.Handlerarticle(articlerepo)
 
 	r.HandleFunc("/articles/{limit}/{offset}", h.FindArticle).Methods("GET")
+	r.HandleFunc("/articles", h.GetAllArticles).Methods("GET")
 	r.HandleFunc("/article/{id}", h.GetArticleId).Methods("GET")
 	r.HandleFunc("/article", h.CreateArticle).Methods("POST")
 	r.HandleFunc("/article/{id}", h.UpdateArticle).Methods("PATCH")
