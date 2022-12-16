@@ -23,6 +23,8 @@ const AddNew = () => {
         status: "publish",
       };
       await API.post("/article", field);
+
+      toast.success("Success created with statush publish");
     } catch (error) {
       console.log(error);
     }

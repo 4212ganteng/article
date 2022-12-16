@@ -3,17 +3,15 @@ import { Table, Button } from "react-bootstrap";
 import { BsPencilSquare } from "react-icons/bs";
 import { BsTrash } from "react-icons/bs";
 import { useQuery } from "react-query";
-import { API } from "../../config/API";
 import { useNavigate, useParams } from "react-router-dom";
+import { API } from "../config/API";
 
-let test = [];
-
-const Published = () => {
+const Previeww = () => {
   const [form, setForm] = React.useState();
   const { id } = useParams();
   let no = 1;
   const navigate = useNavigate();
-  let { data: draft, isLoading } = useQuery("publishCache", async () => {
+  let { data: draft, isLoading } = useQuery("previewCache", async () => {
     const response = await API.get("/articles");
     return response.data.data.filter((p) => p.status === "publish");
   });
@@ -36,13 +34,14 @@ const Published = () => {
     }
   };
   return (
-    <>
+    <div className="m-5" style={{ marginTop: "200" }}>
+      <div className="m-5"></div>
       {isLoading ? null : (
-        <div>
+        <div className="container">
           {draft?.length != 0 ? (
-            <Table striped bordered hover size="sm">
+            <Table striped bordered hover size="sm" className="mt-5">
               <thead>
-                <tr className="text-center">
+                <tr className="text-center mt-5">
                   <th>No</th>
                   <th>Title</th>
                   <th>Category</th>
@@ -80,8 +79,8 @@ const Published = () => {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
 
-export default Published;
+export default Previeww;

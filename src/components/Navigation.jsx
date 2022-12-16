@@ -11,19 +11,37 @@ const Navigation = () => {
     <>
       <Navbar bg="primary" variant="dark" fixed="top" expand="lg">
         <Container>
-          <Navbar.Brand className="cursor-pointer" onClick={() => navigate("/")}>
-            ARTICLE
+          <Navbar.Brand
+            className="cursor-pointer fst-italic"
+            onClick={() => navigate("/")}
+          >
+            My-Article
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              <NavLink to="/" className={({ isActive }) => (isActive ? activeLink : normalLink)}>
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  isActive ? activeLink : normalLink
+                }
+              >
                 All Post
               </NavLink>
-              <NavLink to="/addNew" className={({ isActive }) => (isActive ? activeLink : normalLink)}>
+              <NavLink
+                to="/addNew"
+                className={({ isActive }) =>
+                  isActive ? activeLink : normalLink
+                }
+              >
                 Add New
               </NavLink>
-              <NavLink to="/preview" className={({ isActive }) => (isActive ? activeLink : normalLink)}>
+              <NavLink
+                to="/preview"
+                className={({ isActive }) =>
+                  isActive ? activeLink : normalLink
+                }
+              >
                 Preview
               </NavLink>
             </Nav>
